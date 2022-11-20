@@ -9,7 +9,7 @@ const { HOST_DB } = process.env;
 async function main() {
   try {
     await mongoose.connect(HOST_DB);
-    console.log("connected");
+    console.log("Database connection successful");
     app.listen(3000, () => {
       console.log("Server running. Use our API on port: 3000");
     });
