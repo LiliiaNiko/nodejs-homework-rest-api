@@ -19,20 +19,21 @@ async function create(req, res, next) {
 
 async function deleteById(req, res, next) {
   const { id } = req.params;
-  const contact = await Contact.findById(id);
-  if (contact) {
-    await Contact.findByIdAndDelete(id);
-    return res.json({
-      data: { contact },
-    });
+  const { _id } = req.body;
+  const contact = await Contact.findOneAndDelete({ id, owner: _id });
+
+  if (!contact) {
+    return next(createNotFoundHttpError());
   }
-  return next(createNotFoundHttpError());
+  return res.json({
+    data: { contact },
+  });
 }
 
 async function updateById(req, res, next) {
   const { id } = req.params;
 
-  const updatedContact = await Contact.findByIdAndUpdate(id, req.body, {
+  const updatedContact = await Contact.findOneAndUpdate(id, req.body, {
     new: true,
   });
   return res.json({
