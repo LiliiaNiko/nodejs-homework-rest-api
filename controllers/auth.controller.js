@@ -2,6 +2,9 @@ const { User } = require("../models/user.model");
 const { Conflict, Unauthorized } = require("http-errors");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const gravatar = require("gravatar");
+const fs = require("fs/promises");
+const path = require("path");
 
 const dotenv = require("dotenv");
 dotenv.config();
@@ -74,9 +77,26 @@ async function currentUser(req, res, next) {
   });
 }
 
+async function addAvatar(req, res, next) {
+  console.log("avatarUrl", data);
+  // const newPath = path.join(__dirname, "../public/images");
+  // await fs.rename(req.file.path, newPath);
+  const result = gravatar.url("email", {
+    s: "200",
+    r: "pg",
+    d: "404",
+  });
+  return res.json({
+    data: {
+      avatarUrl: result,
+    },
+  });
+}
+
 module.exports = {
   register,
   login,
   logout,
   currentUser,
+  addAvatar,
 };
